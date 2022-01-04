@@ -1,5 +1,5 @@
 %%--------------------------------------------------------------------
-%% Copyright (c) 2020 EMQ Technologies Co., Ltd. All Rights Reserved.
+%% Copyright (c) 2020-2021 EMQ Technologies Co., Ltd. All Rights Reserved.
 %%
 %% Licensed under the Apache License, Version 2.0 (the "License");
 %% you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@
 
 %% Called when the plugin application start
 load(Env) ->
-    ets:new(?TAB, [set, named_table, {keypos, #psk_entry.psk_id}]),
+    _ = ets:new(?TAB, [set, named_table, {keypos, #psk_entry.psk_id}]),
     {ok, PskFile} = file:open(get_value(path, Env), [read, raw, binary, read_ahead]),
     preload_psks(PskFile, bin(get_value(delimiter, Env))),
-    file:close(PskFile),
+    _ = file:close(PskFile),
     emqx:hook('tls_handshake.psk_lookup', fun ?MODULE:on_psk_lookup/2, []).
 
 %% Called when the plugin application stop
